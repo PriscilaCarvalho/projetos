@@ -1,0 +1,234 @@
+﻿<div class="page-header">
+    <h1>Livraria HBSIS</h1>
+</div>
+
+<a href="#" class="btn btn-info" onclick="adicionarLivroModal(0)">Adicionar novo livro</a> <br /><br />
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="myTable">
+                    <thead>
+                        <tr>
+                            <th>Titulo</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class='modal' tabindex='-1' role='dialog' id="mostrarLivro">
+        <div class='modal-dialog' role='document'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <h3 class='modal-title' id="mostrarDetalhesLivroConteudoTitulo">Adicionar Livro</h3>
+                    <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+                </div>
+                <div class='modal-body' id="mostrarDetalhesLivroConteudo">
+                    <form id="form">
+                        <fieldset id="SubmitForm">
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="Id" id="Id">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Titulo</label>
+                                <input type="text" class="form-control" placeholder="Titulo" name="Titulo" id="Titulo">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Ano</label>
+                                <input type="text" class="form-control" placeholder="Ano" name="Ano" id="Ano">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Preço</label>
+                                <input type="text" class="form-control" placeholder="Preço" name="Preco" id="Preco">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Categoria</label>
+                                <input type="text" class="form-control" placeholder="Categoria" name="Categoria" id="Categoria">
+                            </div>
+                            <a href="#" class="btn btn-success hidden" onclick="salvarLivro()" id="salvarLivro">Adicionar livro</a> <br /><br />
+                            <a href="#" class="btn btn-info hidden" onclick="editarLivroSalvar()" id="editarLivroSalvar">Salvar Edição</a> <br /><br />
+                        </fieldset>
+                    </form>
+
+                </div>
+                <div class='modal-footer'>
+                    <button type='button' class='btn btn-secondary' data-dismiss='modal'>Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<script>
+    
+    $.ajax({
+        type: 'GET',       
+        url: 'api/livros',
+        type: 'GET',
+        dataType: 'json',
+        success: function (data, textStatus, xhr) {            
+
+            $.each(data, function (k, v) {                
+                $("#myTable tbody").append(
+                    "<tr>" +                    
+                    "<td>" + v.Titulo + "</td>" +
+                    "<td>" +
+                    "<button type = 'button' onclick = 'detalhesLivro(" + v.Id + ")' class='btn btn-primary'> Veja mais detalhes </button> | " +
+                    "<a href='#' onclick='excluirLivro(" + v.Id + ")' class='btn btn-danger'> Excluir</a> | " +
+                    "<a href='#' onclick='EditarLivro(" + v.Id + ")' class= 'btn btn-info'> Editar</a> " +
+                    "</td>" +
+                    "</tr>"
+                );
+            });
+
+        },
+        error: function () {
+            console.log('Erro listar livros');
+        }
+    });
+
+    function detalhesLivro(LivroId) {
+
+        $("#editarLivroSalvar").removeClass("show").addClass("hidden");        
+        $("#salvarLivro").removeClass("show").addClass("hidden");
+
+        var t = JSON.stringify(LivroId);
+
+        $.ajax({
+            type: 'GET',
+            url: 'api/livros/' + LivroId,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+    
+                $('#mostrarLivro').modal('show');                
+                
+                $("#Id").val(data.Id);
+                $("#Titulo").val(data.Titulo);
+                $("#Ano").val(data.Ano);
+                $("#Preco").val(data.Preco);
+                $("#Categoria").val(data.Categoria);
+
+                $("#form input").attr("readonly", true);
+            },
+            error: function () {
+                console.log("Erro ao mostrar detalhes do livro");
+            }
+        });
+    }
+
+
+
+    function excluirLivro(id) {
+        $.ajax({
+            type: 'GET',
+            url: 'api/livros/' + id,
+            type: 'DELETE',
+            dataType: 'json',
+            success: function (data) {
+                window.location.href = "/";
+            },
+            error: function () {
+                console.log('Erro ao excluir livros');
+            }
+        });
+    }
+    
+    function salvarLivro() {
+
+        var data = $("#SubmitForm").serialize();
+
+        $.ajax({
+            type: "POST",
+            url: "/api/livros/",
+            data: data,
+            success: function () {                
+
+                window.location.href = "/";
+                
+                $("#mostrarLivro").modal("hide");
+
+            },
+            error: function () {
+                console.log('Erro ao editar livro');
+            }
+        })
+    }
+
+    function adicionarLivroModal() {
+        $("#form")[0].reset();
+        $("#Id").val(0);        
+        $("#mostrarLivro").modal('show');
+        $("#editarLivroSalvar").removeClass("show").addClass("hidden");        
+        $("#salvarLivro").removeClass("hidden").addClass("show");
+        $("#form input").attr("readonly", false);
+
+    }
+
+    function EditarLivro(LivroId) {
+        $("#form input").attr("readonly", false);
+        $("#editarLivroSalvar").removeClass("hidden").addClass("show");        
+        $("#salvarLivro").removeClass("show").addClass("hidden");
+        $("#mostrarLivro").modal('show');
+
+        $.ajax({
+            type: "GET",
+            url: "/api/livros/" + LivroId,
+            success: function (data) {                
+                $("#Id").val(data.Id);
+                $("#Titulo").val(data.Titulo);
+                $("#Ano").val(data.Ano);
+                $("#Preco").val(data.Preco);
+                $("#Categoria").val(data.Categoria);
+
+            },
+            error: function () {
+                console.log('Erro ao editar livro');
+            }
+        })
+    }
+
+
+    function editarLivroSalvar() {
+
+        var $form = $("#SubmitForm");
+        var data = getFormData($form);
+
+        function getFormData($form){
+            var unindexed_array = $form.serializeArray();
+            var indexed_array = {};
+
+            $.map(unindexed_array, function(n, i){
+                indexed_array[n['name']] = n['value'];
+            });
+
+            return indexed_array;
+        }    
+        
+        console.log(data);
+
+        $.ajax({
+            type: "PUT",
+            url: "/api/livros/" + data.Id,
+            data: data,
+            success: function () {                
+
+                window.location.href = "/";
+                
+                $("#mostrarLivro").modal("hide");
+
+            },
+            error: function () {
+                console.log('Erro ao editar livro');
+            }
+        })
+    }
+
+</script>

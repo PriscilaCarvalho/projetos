@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28922.388
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PedraPapelTesoura", "PedraPapelTesoura\PedraPapelTesoura.csproj", "{EBDE82C8-D3B5-407B-B556-CCCF331C6014}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EBDE82C8-D3B5-407B-B556-CCCF331C6014}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBDE82C8-D3B5-407B-B556-CCCF331C6014}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBDE82C8-D3B5-407B-B556-CCCF331C6014}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBDE82C8-D3B5-407B-B556-CCCF331C6014}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BD9E2699-823D-4051-8FF9-CFB2DE2CA3FB}
+	EndGlobalSection
+EndGlobal
